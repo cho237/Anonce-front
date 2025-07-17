@@ -18,6 +18,10 @@ export class UserService {
         return this.http.get<User[]>(`${this.apiUrl}`);
     }
 
+    me(): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/auth/me`);
+    }
+
 
 
 }
