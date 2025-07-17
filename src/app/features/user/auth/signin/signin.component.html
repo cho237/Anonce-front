@@ -1,0 +1,53 @@
+<form class="flex flex-col gap-4 w-100 mt-20" #signinForm="ngForm">
+
+        <input
+                [(ngModel)]="user().email"
+                class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none focus:ring-1 focus:ring-primary-500"
+                id="email"
+                name="email"
+                placeholder="Phone number or email address..."
+                required
+                type="email"
+        />
+
+        <div class="relative">
+            <input
+                    [(ngModel)]="user().password"
+                    [type]="!visiblePass() ? 'password' : 'text'"
+                    class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none focus:ring-1 focus:ring-primary-500"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+            />
+
+            <mat-icon class="absolute end-2 bottom-2 cursor-pointer" (click)="viewPass()">visibility</mat-icon>
+        </div>
+
+        <div
+                [ngClass]="{ 'items-start': !loading(), 'items-center': loading() }"
+                class="flex flex-col gap-4"
+        >
+
+            @if (!loading()) {
+                <div class="w-full mt-4">
+                    <button
+                            (click)="login()"
+                            [disabled]="!signinForm.valid || loading()"
+                            class="cursor-pointer w-full px-5 py-2 bg-blue-500 text-white text-sm font-bold mt-4 hover:opacity-80"
+                    >
+                        <div class="flex items-center gap-2 justify-center xl:mx-10">
+                            <div class="">Sign In</div>
+
+                        </div>
+                    </button>
+                </div>
+            }
+            @if (loading()) {
+                <div class="py-4">
+                    <mat-spinner class="xs mx-auto"></mat-spinner>
+                </div>
+            }
+        </div>
+
+</form>
