@@ -9,6 +9,16 @@ export interface Vote {
     active?: boolean;
 }
 
+export interface VoteListRes {
+    voteData: Vote;
+    userVote?: {
+        id?: string;
+        candidateId: string;
+        voteId?: string;
+        createdAt?: Date;
+    }
+}
+
 export interface VoteCandidate {
     id?: string;
     name: string;

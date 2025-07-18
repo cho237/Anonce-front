@@ -23,8 +23,8 @@ export class AnonceService {
         return this.http.post<Anonce>(`${this.apiUrl}`, anonce)
     }
 
-    markAsRead(anonceId: string): Observable<{ id: string }> {
-        return this.http.post<{ id: string }>(`${this.apiUrl}/read/${anonceId}`, {})
+    markAsRead(anonceId: string): Observable<ReadAnonces[]> {
+        return this.http.post<ReadAnonces[]>(`${this.apiUrl}/read/${anonceId}`, {})
     }
 
     readByUser():  Observable<ReadAnonces[]>  {

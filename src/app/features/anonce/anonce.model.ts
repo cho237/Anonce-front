@@ -16,5 +16,5 @@ export interface AnonceReader {
 
 export interface ReadAnonces {
     id: string;
-    anonce: Anonce;
+    anonce?: Anonce;
 }

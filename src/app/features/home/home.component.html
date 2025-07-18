@@ -11,117 +11,184 @@
                 <img alt="" class="h-15" src="annoncement-icon.svg">
                 <div class="flex flex-col ">
                     <div>Announcements</div>
-                    @if (!loading()) {
-                        <div class="text-lg md:text-xl">{{ annoncement().length - annoncementRead().length }}</div>
-                    }
+                    <div class="text-lg md:text-xl xl:text-2xl">{{ annoncement().length - annoncementRead().length }}
+                    </div>
+
                 </div>
             </div>
             <div class="border p-2 lg:p-4 2xl:p-6 rounded-xl w-full flex items-center bg-[#08E36D]">
                 <img alt="" class="h-15" src="voting-icon.svg">
                 <div class="flex flex-col ">
                     <div>Votings</div>
-                    @if (!loading()) {
-                        <div class="text-lg md:text-xl">{{ votes().length }}</div>
-                    }
+                    <div class="text-lg md:text-xl xl:text-2xl">{{ votedCount() }}</div>
                 </div>
             </div>
         </div>
     </div>
     <div class="flex flex-col md:flex-row gap-4 ">
         <div class="w-full bg-[#FFFFFF1A] rounded-xl h-[300px] md:h-[450px] 2xl:h-[550px] overflow-auto ">
-            <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#3B46F1]">Announcements</p>
-            <div class="text-xs py-4 flex flex-col gap-1">
-                @for (item of annoncement(); track item.id) {
-                    <div (click)="openAnonceModal(item)" class="flex cursor-pointer ">
-                        <div class="bg-white">
-                            <img alt="" class="h-16 w-18" src="notification.svg">
-                        </div>
+            <div class="flex justify-center items-center gap-2">
+                <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#3B46F1]">Announcements </p>
+                <mat-icon (click)="getAnoncements()" class="cursor-pointer">refresh</mat-icon>
+            </div>
 
-                        <div [ngClass]="{  'bg-[#3B46F133]': !isRead(item.id!) }"
-                             class="py-2 flex flex-col gap-4  w-full pl-2">
-                            <div class="line-clamp-1">
-                                {{ item.title }}
-                            </div>
-                            <div class="" style="font-size: 10px">{{ item.createdAt | date:'fullDate' }}</div>
-                        </div>
+            <div class="text-xs py-4 flex flex-col gap-1">
+                @if (loadingAnoncements()) {
+                    <div class="py-4">
+                        <mat-spinner class="xs mx-auto"></mat-spinner>
                     </div>
+                } @else {
+                    @for (item of annoncement(); track item.id) {
+                        <div (click)="openAnonceModal(item)" class="flex cursor-pointer ">
+                            <div class="bg-white">
+                                <img alt="" class="h-16 w-18" src="notification.svg">
+                            </div>
+
+                            <div [ngClass]="{  'bg-[#3B46F133]': !isRead(item.id!) }"
+                                 class="py-2 flex flex-col gap-4  w-full pl-2">
+                                <div class="line-clamp-1">
+                                    {{ item.title }}
+                                </div>
+                                <div class="" style="font-size: 10px">{{ item.createdAt | date:'fullDate' }}</div>
+                            </div>
+                        </div>
+                    }
                 }
 
             </div>
         </div>
         <div class="w-full bg-[#FFFFFF1A] rounded-xl h-[300px] md:h-[450px] 2xl:h-[550px] overflow-auto">
-            <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#08E36D]">Votings</p>
-            @for (item of votes(); track item.id) {
+
+            <div class="flex justify-center items-center gap-2">
+                <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#08E36D]">Votings </p>
+                <mat-icon (click)="getVotes()" class="cursor-pointer ">refresh</mat-icon>
+            </div>
             <div class="text-xs py-4 flex flex-col gap-1">
-                <div (click)="openVoteModal(item)" class="flex cursor-pointer">
-                    <div class="bg-white">
-                        <img alt="" class="h-16 w-18" src="notification.svg">
+                @if (loadingVotes()) {
+                    <div class="py-4">
+                        <mat-spinner class="xs mx-auto"></mat-spinner>
                     </div>
+                } @else {
 
-                    <div class="py-2 flex flex-col justify-center uppercase gap-4 bg-[#08E36D33] w-full pl-2">
-                        <div class="line-clamp-1">{{item.title}}</div>
-                    </div>
-                </div>
-            </div>
-            }
-        </div>
-    </div>
-</div>
+                    @for (item of votes(); track item.voteData.id) {
+                        <div class="text-xs  flex flex-col ">
+                            <div (click)="openVoteModal(item)" class="flex cursor-pointer">
+                                <div class="bg-white">
+                                    <img alt="" class="h-16 w-18" src="vote-placeholder.svg">
+                                </div>
 
-
-<ng-template #annoceDialog>
-    <div class="">
-        <div class="flex justify-end py-2 px-4 ">
-            <div (click)="closeAnonceModal()" class="cursor-pointer">x</div>
-        </div>
-        <div class="p-4 flex flex-col gap-2">
-            <img alt="img" class="h-50 w-[100%] object-cover" src="annoncement-placeholder.svg">
-            <div class="font-bold">{{ detailAnonce()!.title }}</div>
-            <div class="uppercase text-[#FFFFFF99]"
-                 style="font-size: 8px">{{ detailAnonce()!.createdAt | date:'fullDate' }}
-            </div>
-            <div class="text-[#FFFFFF99] h-50 overflow-auto" style="font-size: 12px">{{ detailAnonce()!.content }}
-
-            </div>
-        </div>
-    </div>
-
-</ng-template>
-
-<ng-template #voteDialog>
-    <div class="bg-[#051726]">
-        <div class="flex justify-end py-2 px-4 ">
-            <div (click)="closeVoteModal()" class="cursor-pointer">x</div>
-        </div>
-        <div class="py-2 px-4 xl:px-8 flex flex-col gap-2 xl:gap-4 ">
-            <p class="uppercase text-center pb-4">{{detailVote()?.title}}</p>
-            <div class="text-[#FFFFFF99] max-h-30 overflow-auto" style="font-size: 12px">
-                {{detailVote()?.description}}
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4  align-items-center max-h-94  overflow-auto">
-                @for (candidate of detailVote()?.candidates; track candidate.id) {
-                    <div class="flex flex-col gap-1 ">
-                        <p>{{candidate.name}}</p>
-                        <img class="rounded-2xl h-60 w-full" src="user-placeholder.jpg" alt="placeholder">
-                        <div style="font-size: 8px" class="text-[#FFFFFF99]">{{candidate.description}}
+                                <div [ngClass]="{ ' bg-[#08E36D33]': !item.userVote }"
+                                     class="py-2 flex flex-col justify-center uppercase gap-4 w-full pl-2">
+                                    <div class="line-clamp-1">{{ item.voteData.title }}</div>
+                                </div>
+                            </div>
                         </div>
-                        <button class="rounded-2xl bg-white px-4 py-2 text-black text-sm w-full cursor-pointer">Vote
-                        </button>
-                    </div>
+                    }
                 }
             </div>
-            <div class="flex gap-2 mt-4" style="font-size: 12px">
-                <div class="border rounded-xl w-full p-2">
-                    <div class="text-[#FFFFFF99] text-center">VOTES</div>
-                    <div class="text-center">25</div>
+        </div>
+    </div>
+
+
+    <ng-template #annoceDialog>
+        <div class="">
+            <div class="flex justify-end py-2 px-4 ">
+                <div (click)="closeAnonceModal()" class="cursor-pointer">x</div>
+            </div>
+            <div class="p-4 flex flex-col gap-2">
+                <img alt="img" class="h-50 w-[100%] object-cover" src="annoncement-placeholder.svg">
+                <div class="font-bold">{{ detailAnonce()!.title }}</div>
+                <div class="uppercase text-[#FFFFFF99]"
+                     style="font-size: 8px">{{ detailAnonce()!.createdAt | date:'fullDate' }}
                 </div>
-                <div class="border rounded-xl w-full p-2 ">
-                    <div class="text-[#FFFFFF99] text-center">TIME REMAINING</div>
-                    <div class="text-center">00:11:000</div>
+                <div class="text-[#FFFFFF99] h-50 overflow-auto" style="font-size: 12px">{{ detailAnonce()!.content }}
+
                 </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #voteDialog>
+        <div>
+            <div class="flex justify-end py-2 px-4 ">
+                <div (click)="closeVoteModal()" class="cursor-pointer">x</div>
+            </div>
+            <div class="py-2 px-4 xl:px-8 flex flex-col gap-2 xl:gap-4 ">
+                <p class="uppercase text-center pb-4">{{ detailVote()!.voteData.title }}</p>
+                <div class="text-[#FFFFFF99] max-h-30 overflow-auto" style="font-size: 12px">
+                    {{ detailVote()!.voteData.description }}
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4  align-items-center max-h-94  overflow-auto">
+                    @for (candidate of detailVote()!.voteData.candidates; track candidate.id) {
+                        <div class="flex flex-col gap-1 ">
+                            <p>{{ candidate.name }}</p>
+                            <img class="rounded-2xl h-54 w-full" src="user-placeholder.jpg" alt="placeholder">
+                            <div style="font-size: 8px" class="text-[#FFFFFF99]">{{ candidate.description }}
+                            </div>
+                            <button [disabled]="voting() || detailVote()?.userVote"
+                                    [ngClass]="{  'bg-[#08E36D]': detailVote()?.userVote && detailVote()?.userVote?.candidateId === candidate.id, 'bg-white': !detailVote()?.userVote || detailVote()?.userVote?.candidateId !== candidate.id, }"
+                                    (click)="openConfirmVoteDialog(candidate)"
+                                    class="hover:bg-[#08E36D] rounded-2xl bg-white px-4 py-2 text-black text-sm w-full cursor-pointer ">
+                                Vote
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="flex gap-2 mt-4" style="font-size: 12px">
+                    <!--                <div class="border rounded-xl w-full p-2">-->
+                    <!--                    <div class="text-[#FFFFFF99] text-center">VOTES</div>-->
+                    <!--                    <div class="text-center">25</div>-->
+                    <!--                </div>-->
+                    <div class="border rounded-xl w-full p-2 ">
+                        <div class="text-[#FFFFFF99] text-center">TIME REMAINING</div>
+                        <div class="text-center">00:11:000</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+
+    <ng-template #confirmVoteDialog>
+        <div class="flex justify-end py-2 px-4 ">
+            <div (click)="closeConfirmVoteModal()" class="cursor-pointer">x</div>
+        </div>
+
+        <div  class="py-8 px-4 xl:px-8 flex flex-col gap-2 xl:gap-4  text-white">
+            <p class=" text-center text-xl pb-4 ">Confirm vote: <span class="uppercase">"{{ selectedCanditate()?.name }}"</span>
+            </p>
+
+            <div class="flex flex-col gap-6 text-[#4E5566]">
+
+                <div class="relative">
+
+                    <label class="text-xs text-white" for="password">Password</label>
+                    <input
+                            [(ngModel)]="password"
+                            [type]="!visiblePass() ? 'password' : 'text'"
+                            class="border border-[#4E5566] placeholder-[#4E5566]   text-sm block w-full px-2 py-4 outline-none rounded-sm text-white"
+                            id="password"
+                            name="password"
+                            placeholder="Enter Password..."
+                            required
+                    />
+
+                    <mat-icon (click)="viewPass()" class="absolute end-2 bottom-3 cursor-pointer">visibility</mat-icon>
+                </div>
+
+                <button
+                        (click)="confirmVote()"
+                        [disabled]="password === '' "
+                        class="rounded-sm cursor-pointer w-full px-5 py-3 bg-[#3B46F1] text-white text-sm hover:opacity-80 mb-4"
+                >
+                    Confirm Vote
+                </button>
+
             </div>
 
         </div>
 
-    </div>
-</ng-template>
+
+    </ng-template>

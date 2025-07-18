@@ -2,7 +2,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {Vote, Voter, VoteResponse, VoteResult} from "./vote.model";
+import {Vote, VoteListRes, Voter, VoteResponse, VoteResult} from "./vote.model";
 
 @Injectable({
     providedIn: 'root',
@@ -14,16 +14,16 @@ export class VoteService {
     constructor(private http: HttpClient) {
     }
 
-    getAll(isActive: boolean): Observable<VoteResponse<Vote[]>> {
-        return this.http.get<VoteResponse<Vote[]>>(`${this.apiUrl}?isActive=${isActive}`,)
+    getAll(isActive: boolean): Observable<VoteResponse<VoteListRes[]>> {
+        return this.http.get<VoteResponse<VoteListRes[]>>(`${this.apiUrl}?isActive=${isActive}`,)
     }
 
     add(vote: Vote): Observable<VoteResponse<Vote>> {
         return this.http.post<VoteResponse<Vote>>(`${this.apiUrl}`, vote)
     }
 
-    cast(voteId: string, candidateId:string): Observable<VoteResponse<Vote>> {
-        return this.http.post<VoteResponse<Vote>>(`${this.apiUrl}/cast`, {voteId, candidateId})
+    cast(voteId: string, candidateId:string, password:string): Observable<VoteResponse<Vote>> {
+        return this.http.post<VoteResponse<Vote>>(`${this.apiUrl}/cast`, {voteId, candidateId, password})
     }
 
     results(voteId: string): Observable<VoteResponse<VoteResult[]>> {

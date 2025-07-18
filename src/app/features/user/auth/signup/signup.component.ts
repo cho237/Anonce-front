@@ -35,8 +35,6 @@ export class SignupComponent implements  OnDestroy {
   });
 
   signup() {
-    this.loading.set(true);
-    console.log(this.user());
     this.subs.add(
         this.authService
             .signup(this.user())
