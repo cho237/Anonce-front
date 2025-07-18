@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../environments/environment";
-import {Anonce, AnonceReader} from "./anonce.model";
+import {Anonce, AnonceReader, ReadAnonces} from "./anonce.model";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
@@ -9,7 +9,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class AnonceService {
     private baseUrl = environment.apiUrl;
-    private apiUrl = this.baseUrl + 'anonces';
+    private apiUrl = this.baseUrl + '/anonces';
 
     constructor(private http: HttpClient) {
     }
@@ -27,8 +27,8 @@ export class AnonceService {
         return this.http.post<{ id: string }>(`${this.apiUrl}/read/${anonceId}`, {})
     }
 
-    readByUser(): Observable<{ id: string }[]> {
-        return this.http.get<{ id: string }[]>(`${this.apiUrl}/read-by-user`,)
+    readByUser():  Observable<ReadAnonces[]>  {
+        return this.http.get<ReadAnonces[]>(`${this.apiUrl}/read-by-user`,)
     }
 
     readers(anonceId: string): Observable<AnonceReader[]> {

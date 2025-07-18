@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AnonceListComponent } from './anonce-list.component';
+import { AnonceListUserComponent } from './anonce-list-user.component';
 
-describe('AnonceListComponent', () => {
-  let component: AnonceListComponent;
-  let fixture: ComponentFixture<AnonceListComponent>;
+describe('AnonceListUserComponent', () => {
+  let component: AnonceListUserComponent;
+  let fixture: ComponentFixture<AnonceListUserComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AnonceListComponent]
+      imports: [AnonceListUserComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AnonceListComponent);
+    fixture = TestBed.createComponent(AnonceListUserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

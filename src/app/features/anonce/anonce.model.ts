@@ -13,3 +13,8 @@ export interface AnonceReader {
     id: string;
     user: User;
 }
+
+export interface ReadAnonces {
+    id: string;
+    anonce: Anonce;
+}

@@ -1,29 +1,25 @@
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {AuthService} from "../../user/auth/auth.service";
-import {User} from "../../user/user.model";
-import {ToastrService} from "ngx-toastr";
-import {Subscription} from "rxjs";
+import {UserRole} from "../../user/user.model";
+import {AnonceListAdminComponent} from "../anonce-list-admin/anonce-list-admin.component";
+import {AnonceListUserComponent} from "../anonce-list-user/anonce-list-user.component";
 
 @Component({
     selector: 'app-anonce-list',
-    imports: [],
+    imports: [
+        AnonceListAdminComponent,
+        AnonceListUserComponent
+    ],
     templateUrl: './anonce-list.component.html',
-    styleUrl: './anonce-list.component.scss'
 })
-export class AnonceListComponent implements OnInit, OnDestroy {
-    user = signal<User | null>(null);
-    loading = signal(false);
-    toaster = inject(ToastrService);
-    subs = new Subscription();
+export class AnonceListComponent {
+
     authService = inject(AuthService);
+    isAdmin = signal(false);
 
-    ngOnInit() {
-
+    constructor() {
+        this.isAdmin = signal(this.authService.currentUser()?.role === UserRole.ADMIN);
     }
 
-
-    ngOnDestroy() {
-        this.subs.unsubscribe();
-    }
 
 }

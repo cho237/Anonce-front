@@ -16,7 +16,7 @@ export class AuthService {
 
     // Expose signal getter for components
     get currentUser() {
-        return this.currentUserSignal();
+        return this.currentUserSignal;
     }
 
     constructor(private http: HttpClient) {}

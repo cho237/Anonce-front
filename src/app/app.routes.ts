@@ -21,6 +21,13 @@ export const routes: Routes = [
 
     },
     {
+        path: 'vote',
+        loadChildren: () =>
+            import('./features/vote/vote.routes').then((r) => r.VoteRoutes),
+        canActivate: [AuthGuard],
+
+    },
+    {
         path: '**',
         redirectTo: '/home',
     },

@@ -1,48 +1,72 @@
-<form class="flex flex-col gap-4 w-100 mt-20" #signinForm="ngForm">
-
-        <input
-                [(ngModel)]="user().email"
-                class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none focus:ring-1 focus:ring-primary-500"
-                id="email"
-                name="email"
-                placeholder="Phone number or email address..."
-                required
-                type="email"
-        />
-
+<div class="general-width flex justify-center md:justify-between">
+    <div class="py-4 px-4  md:py-20 xl:py-32 md:text-2xl xl:text-4xl 2xl:text-6xl hidden md:block">WELCOME TO STUDENTS
+        ASSOCIATION
+    </div>
+    <form #signinForm="ngForm"
+          class="flex flex-col gap-4 w-100 lg:w-150 mt-20 bg-white text-[#1D2026] py-4  px-4 md:py-20 xl:py-32 shadow-lg rounded-sm">
+        <p class="font-bold md:text-xl xl:text-2xl text-center py-4 xl:py-6">Sign in to your account</p>
+        <div class="">
+            <label class="text-xs" for="email">Email</label>
+            <input
+                    [(ngModel)]="user().email"
+                    class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none "
+                    id="email"
+                    name="email"
+                    placeholder="Phone number or email address..."
+                    required
+                    type="email"
+            />
+        </div>
         <div class="relative">
+
+            <label class="text-xs" for="password">Password</label>
             <input
                     [(ngModel)]="user().password"
                     [type]="!visiblePass() ? 'password' : 'text'"
-                    class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none focus:ring-1 focus:ring-primary-500"
+                    class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none "
                     id="password"
                     name="password"
                     placeholder="Password"
                     required
             />
 
-            <mat-icon class="absolute end-2 bottom-2 cursor-pointer" (click)="viewPass()">visibility</mat-icon>
+            <mat-icon (click)="viewPass()" class="absolute end-2 bottom-2 cursor-pointer">visibility</mat-icon>
         </div>
 
         <div
                 [ngClass]="{ 'items-start': !loading(), 'items-center': loading() }"
-                class="flex flex-col gap-4"
+                class="flex flex-col gap-4 mt-4"
         >
-
             @if (!loading()) {
-                <div class="w-full mt-4">
-                    <button
-                            (click)="login()"
-                            [disabled]="!signinForm.valid || loading()"
-                            class="cursor-pointer w-full px-5 py-2 bg-blue-500 text-white text-sm font-bold mt-4 hover:opacity-80"
-                    >
-                        <div class="flex items-center gap-2 justify-center xl:mx-10">
-                            <div class="">Sign In</div>
+                <div class="flex items-center justify-between flex-col lg:flex-row gap-2 w-full">
+                    <div class="text-xs font-medium text-[#8C94A3]">
+                        Do not have an account yet??
+                        <span
+                                routerLink="/user/auth/signup"
+                                class="cursor-pointer text-[#003E73]"
+                        >SignUp</span
+                        >
+                    </div>
+                    @if (!loading()) {
+                        <div class="w-full lg:w-auto ">
+                            <button
+                                    (click)="login()"
+                                    [disabled]="!signinForm.valid || loading()"
+                                    class="cursor-pointer w-full px-5 py-2 bg-[#003E73] text-white text-sm font-bold  hover:opacity-80"
+                            >
+                                <div class="flex items-center gap-2 justify-center xl:mx-10">
+                                    <div class="">Sign In</div>
 
+
+                                </div>
+                            </button>
                         </div>
-                    </button>
+                    }
                 </div>
+
+
             }
+
             @if (loading()) {
                 <div class="py-4">
                     <mat-spinner class="xs mx-auto"></mat-spinner>
@@ -50,4 +74,5 @@
             }
         </div>
 
-</form>
+    </form>
+</div>

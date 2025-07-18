@@ -1,1 +1,5 @@
-<p>vote-list works!</p>
+@if(isAdmin()){
+<app-vote-list-admin></app-vote-list-admin>
+} @else {
+    <app-vote-list-user></app-vote-list-user>
+}

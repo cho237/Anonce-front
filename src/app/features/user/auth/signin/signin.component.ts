@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, signal} from '@angular/core';
 import {Subscription} from "rxjs";
 import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {AuthReq} from "../../user.model";
 import {FormsModule} from "@angular/forms";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
@@ -11,7 +11,7 @@ import {AuthService} from "../auth.service";
 
 @Component({
     selector: 'app-signin',
-    imports: [FormsModule, MatProgressSpinner, NgClass, MatIcon],
+    imports: [FormsModule, MatProgressSpinner, NgClass, MatIcon, RouterLink],
     templateUrl: './signin.component.html',
     styleUrl: './signin.component.scss'
 })
@@ -41,8 +41,11 @@ export class SigninComponent implements OnDestroy {
                         this.loading.set(false);
                     },
                     error: (error) => {
-                        console.log(error);
-                        this.toastr.error('Login failed');
+                        const errMsg = Array.isArray(error.error.message)
+                            ? error.error.message[0]
+                            : error.error.message || 'Login failed';
+
+                        this.toastr.error(errMsg);
                         this.loading.set(false);
                     },
                 })

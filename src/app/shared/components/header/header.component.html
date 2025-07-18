@@ -1,0 +1,20 @@
+<script src="../../../features/home/home.component.ts"></script>
+<div class="py-4 general-width text-white  bg-[#003E73] flex justify-between gap-4 items-center">
+
+    <img alt="logo" class="h-6 sm:h-8 lg:h-10" src="logo.svg">
+
+    @if (isLoggedIn()){
+    <div [matMenuTriggerFor]="menu" class="bg-[#0EBBE3] p-1 sm:p-2 rounded-4xl font-bold cursor-pointer text-sm md:text-md xl:text-lg xl:px-2.5">{{initials()}}</div>
+    }
+    <mat-menu #menu="matMenu">
+        <div class="p-2 text-sm  bg-[#003E73] font-bold flex flex-col gap-2">
+            <div
+                    (click)="logout()"
+                    class="cursor-pointer flex justify-between items-center hover:opacity-70"
+            >
+                <div class="">Log out</div>
+                <mat-icon class="">logout</mat-icon>
+            </div>
+        </div>
+    </mat-menu>
+</div>

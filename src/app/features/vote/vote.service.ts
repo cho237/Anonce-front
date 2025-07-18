@@ -7,9 +7,9 @@ import {Vote, Voter, VoteResponse, VoteResult} from "./vote.model";
 @Injectable({
     providedIn: 'root',
 })
-export class AnonceService {
+export class VoteService {
     private baseUrl = environment.apiUrl;
-    private apiUrl = this.baseUrl + 'votes';
+    private apiUrl = this.baseUrl + '/votes';
 
     constructor(private http: HttpClient) {
     }
