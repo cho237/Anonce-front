@@ -13,6 +13,9 @@
   ));
 }
 
+input{
+  @apply rounded-sm py-3 placeholder-[#8C94A3];
+}
 
 html, body  {
   font-family: "Inter", sans-serif;

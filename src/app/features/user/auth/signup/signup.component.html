@@ -1,6 +1,6 @@
 <div class="general-width flex justify-center md:justify-between">
-    <div class="py-4 px-4 md:py-20 xl:py-32 md:text-2xl xl:text-4xl 2xl:text-6xl hidden md:block">WELCOME TO STUDENTS
-        ASSOCIATION
+    <div class="py-4 px-4  md:py-20 xl:py-32 md:text-2xl xl:text-4xl 2xl:text-6xl hidden md:block">WELCOME TO STUDENTS
+        <span class="text-[#0EBBE3]">ASSOCIATION</span>
     </div>
     <form #signinForm="ngForm"
           class="flex flex-col gap-4 w-100 lg:w-150 mt-20 bg-white text-[#1D2026] py-4  px-4 md:py-20 xl:py-32 shadow-lg rounded-sm">
@@ -42,7 +42,7 @@
                     required
             />
 
-            <mat-icon (click)="viewPass()" class="absolute end-2 bottom-2 cursor-pointer">visibility</mat-icon>
+            <mat-icon (click)="viewPass()" class="absolute end-2 bottom-3 cursor-pointer">visibility</mat-icon>
         </div>
 
         <div
@@ -64,7 +64,7 @@
                             <button
                                     (click)="signup()"
                                     [disabled]="!signinForm.valid || loading()"
-                                    class="cursor-pointer w-full px-5 py-2 bg-[#003E73] text-white text-sm font-bold  hover:opacity-80"
+                                    class="cursor-pointer w-full px-5 py-2 bg-[#003E73] text-white text-sm font-bold rounded-sm hover:opacity-80"
                             >
                                 <div class="flex items-center gap-2 justify-center xl:mx-10">
                                     <div class="">Sign Up</div>
