@@ -1,10 +1,10 @@
 <div class="general-width flex justify-center md:justify-between">
-    <div class="py-4 px-4  md:py-20 xl:py-32 md:text-2xl xl:text-4xl 2xl:text-6xl hidden md:block">WELCOME TO STUDENTS
-        <span class="text-[#0EBBE3]">ASSOCIATION</span>
+    <div class="py-4 px-4  md:py-20 xl:py-32 md:text-2xl xl:text-4xl 2xl:text-6xl hidden md:block">BIENVENUE À L'ASSOCIATION DES
+        <span class="text-[#0EBBE3]">ÉTUDIANTS</span>
     </div>
     <form #signinForm="ngForm"
-          class="flex flex-col gap-4 w-100 lg:w-150 mt-20 bg-white text-[#1D2026] py-4  px-4 md:py-20 xl:py-32 shadow-lg rounded-sm">
-        <p class="font-bold md:text-xl xl:text-2xl text-center py-4 xl:py-6">Sign in to your account</p>
+          class="flex flex-col gap-4 w-100 lg:w-[700px] mt-20 bg-white text-[#1D2026] py-4  px-4 md:py-20 xl:py-32 shadow-lg rounded-sm">
+        <p class="font-bold md:text-xl xl:text-2xl text-center py-4 xl:py-6">Connectez-vous à votre compte</p>
         <div class="">
             <label class="text-xs" for="email">Email</label>
             <input
@@ -12,21 +12,21 @@
                     class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none "
                     id="email"
                     name="email"
-                    placeholder="Email address..."
+                    placeholder="Adresse mail..."
                     required
                     type="email"
             />
         </div>
         <div class="relative">
 
-            <label class="text-xs" for="password">Password</label>
+            <label class="text-xs" for="password">Mot de passe</label>
             <input
                     [(ngModel)]="user().password"
                     [type]="!visiblePass() ? 'password' : 'text'"
                     class="border border-[#E9EAF0]  text-sm block w-full p-2 outline-none "
                     id="password"
                     name="password"
-                    placeholder="Password...."
+                    placeholder="Mot de passe...."
                     required
             />
 
@@ -40,11 +40,11 @@
             @if (!loading()) {
                 <div class="flex items-center justify-between flex-col lg:flex-row gap-2 w-full">
                     <div class="text-xs font-medium text-[#8C94A3]">
-                        Do not have an account yet??
+                        Vous n'avez pas encore de compte ?
                         <span
                                 routerLink="/user/auth/signup"
                                 class="cursor-pointer text-[#003E73]"
-                        >SignUp</span
+                        >S'inscrire</span
                         >
                     </div>
                     @if (!loading()) {
@@ -55,7 +55,7 @@
                                     class="cursor-pointer w-full px-5 py-2 bg-[#003E73] text-white text-sm font-bold rounded-sm hover:opacity-80"
                             >
                                 <div class="flex items-center gap-2 justify-center xl:mx-10">
-                                    <div class="">Sign In</div>
+                                    <div class="">Se connecter</div>
 
 
                                 </div>

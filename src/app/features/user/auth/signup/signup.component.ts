@@ -40,7 +40,7 @@ export class SignupComponent implements  OnDestroy {
             .signup(this.user())
             .subscribe({
               next: (res) => {
-                this.toastr.info('Account created successfully');
+                this.toastr.info('Compte créé avec succès');
                 this.router.navigate(['/user/auth/signin']);
                 this.loading.set(false);
               },
@@ -48,7 +48,7 @@ export class SignupComponent implements  OnDestroy {
 
                 const errMsg = Array.isArray(error.error.message)
                     ? error.error.message[0]
-                    : error.error.message || 'Signup failed';
+                    : error.error.message || 'Échec de l’inscription';
 
                 this.toastr.error(errMsg);
                 this.loading.set(false);

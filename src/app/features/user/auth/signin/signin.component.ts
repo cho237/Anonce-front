@@ -36,14 +36,14 @@ export class SigninComponent implements OnDestroy {
                 .signin(this.user())
                 .subscribe({
                     next: (res) => {
-                        this.toastr.success('Login successful');
+                        this.toastr.success('Connexion réussie');
                         this.router.navigate(['/home']);
                         this.loading.set(false);
                     },
                     error: (error) => {
                         const errMsg = Array.isArray(error.error.message)
                             ? error.error.message[0]
-                            : error.error.message || 'Login failed';
+                            : error.error.message || 'Échec de la connexion';
 
                         this.toastr.error(errMsg);
                         this.loading.set(false);

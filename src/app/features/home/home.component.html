@@ -2,15 +2,15 @@
 <div class="general-width py-4 md:py-6 lg:py-8 flex flex-col gap-4 ">
 
     @if (user() !== null) {
-        <p class="uppercase font-bold text-sm md:text-lg xl:text-xl">hello {{ user()!.name }}</p>
+        <p class="uppercase font-bold text-sm md:text-lg xl:text-xl">salut {{ user()!.name }}</p>
     }
     <div class="p-2  md:p-4 xl:p-6 bg-[#FFFFFF1A] rounded-xl ">
-        <p class=" text-sm md:text-lg mb-2">statistics</p>
+        <p class=" text-sm md:text-lg mb-2">statistiques</p>
         <div class="flex flex-col md:flex-row gap-4 lg:gap-6 xl:gap-10">
             <div class="border p-2 rounded-xl w-full flex items-center bg-[#3B46F1] ">
                 <img alt="" class="h-15" src="annoncement-icon.svg">
                 <div class="flex flex-col ">
-                    <div>Announcements</div>
+                    <div>Annonces</div>
                     <div class="text-lg md:text-xl xl:text-2xl">{{ annoncement().length - annoncementRead().length }}
                     </div>
 
@@ -19,7 +19,7 @@
             <div class="border p-2 lg:p-4 2xl:p-6 rounded-xl w-full flex items-center bg-[#08E36D]">
                 <img alt="" class="h-15" src="voting-icon.svg">
                 <div class="flex flex-col ">
-                    <div>Votings</div>
+                    <div>Votes</div>
                     <div class="text-lg md:text-xl xl:text-2xl">{{ votedCount() }}</div>
                 </div>
             </div>
@@ -28,10 +28,9 @@
     <div class="flex flex-col md:flex-row gap-4 ">
         <div class="w-full bg-[#FFFFFF1A] rounded-xl h-[300px] md:h-[450px] 2xl:h-[550px] overflow-auto ">
             <div class="flex justify-center items-center gap-2">
-                <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#3B46F1]">Announcements </p>
+                <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#3B46F1]">Annonces </p>
                 <mat-icon (click)="getAnoncements()" class="cursor-pointer">refresh</mat-icon>
             </div>
-
             <div class="text-xs py-4 flex flex-col gap-1">
                 @if (loadingAnoncements()) {
                     <div class="py-4">
@@ -60,7 +59,7 @@
         <div class="w-full bg-[#FFFFFF1A] rounded-xl h-[300px] md:h-[450px] 2xl:h-[550px] overflow-auto">
 
             <div class="flex justify-center items-center gap-2">
-                <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#08E36D]">Votings </p>
+                <p class="uppercase text-center text-sm  py-2 xl:py-4 text-[#08E36D]">Votes </p>
                 <mat-icon (click)="getVotes()" class="cursor-pointer ">refresh</mat-icon>
             </div>
             <div class="text-xs py-4 flex flex-col gap-1">
@@ -129,7 +128,7 @@
                                     [ngClass]="{  'bg-[#08E36D]': detailVote()?.userVote && detailVote()?.userVote?.candidateId === candidate.id, 'bg-white': !detailVote()?.userVote || detailVote()?.userVote?.candidateId !== candidate.id, }"
                                     (click)="openConfirmVoteDialog(candidate)"
                                     class="hover:bg-[#08E36D] rounded-2xl bg-white px-4 py-2 text-black text-sm w-full cursor-pointer ">
-                                Vote
+                                Voter
                             </button>
                         </div>
                     }
@@ -140,7 +139,7 @@
                     <!--                    <div class="text-center">25</div>-->
                     <!--                </div>-->
                     <div class="border rounded-xl w-full p-2 ">
-                        <div class="text-[#FFFFFF99] text-center">TIME REMAINING</div>
+                        <div class="text-[#FFFFFF99] text-center">TEMPS RESTANT</div>
                         <div class="text-center">00:11:000</div>
                     </div>
                 </div>
@@ -157,21 +156,21 @@
         </div>
 
         <div  class="py-8 px-4 xl:px-8 flex flex-col gap-2 xl:gap-4  text-white">
-            <p class=" text-center text-xl pb-4 ">Confirm vote: <span class="uppercase">"{{ selectedCanditate()?.name }}"</span>
+            <p class=" text-center text-xl pb-4 ">Confirmer le vote : <span class="uppercase">"{{ selectedCanditate()?.name }}"</span>
             </p>
 
             <div class="flex flex-col gap-6 text-[#4E5566]">
 
                 <div class="relative">
 
-                    <label class="text-xs text-white" for="password">Password</label>
+                    <label class="text-xs text-white" for="password">Mot de passe</label>
                     <input
                             [(ngModel)]="password"
                             [type]="!visiblePass() ? 'password' : 'text'"
                             class="border border-[#4E5566] placeholder-[#4E5566]   text-sm block w-full px-2 py-4 outline-none rounded-sm text-white"
                             id="password"
                             name="password"
-                            placeholder="Enter Password..."
+                            placeholder="Entrez le mot de passe..."
                             required
                     />
 
@@ -183,7 +182,7 @@
                         [disabled]="password === '' "
                         class="rounded-sm cursor-pointer w-full px-5 py-3 bg-[#3B46F1] text-white text-sm hover:opacity-80 mb-4"
                 >
-                    Confirm Vote
+                    Confirmer le vote
                 </button>
 
             </div>
