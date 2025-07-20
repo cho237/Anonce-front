@@ -23,7 +23,7 @@ export class VoteService {
     }
 
     cast(voteId: string, candidateId:string, password:string): Observable<VoteResponse<Vote>> {
-        return this.http.post<VoteResponse<Vote>>(`${this.apiUrl}/cast`, {voteId, candidateId, password})
+        return this.http.post<VoteResponse<Vote>>(`${this.apiUrl}/voter`, {voteId, candidateId, password})
     }
 
     results(voteId: string): Observable<VoteResponse<VoteResult[]>> {
