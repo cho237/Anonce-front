@@ -1,4 +1,5 @@
-import {User} from "../user/user.model";
+import { User } from "../../features/user/user.model";
+
 
 export interface Vote {
     id?: string;

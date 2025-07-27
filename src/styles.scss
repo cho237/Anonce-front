@@ -6,28 +6,28 @@
 
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
-:root {
-  @include mat.dialog-overrides((
-          container-color: #051726,
-          subhead-color: red,
-  ));
-}
+// :root {
+//   @include mat.dialog-overrides((
+//           container-color: #051726,
+//           subhead-color: red,
+//   ));
+// }
 
-input{
-  @apply rounded-sm py-3 placeholder-[#8C94A3];
-}
+// input{
+//   @apply rounded-sm py-3 placeholder-[#8C94A3];
+// }
 
-html, body  {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  height: 100%;
-  background-color: #051726;
-  color: white;
-}
+// html, body  {
+//   font-family: "Inter", sans-serif;
+//   font-optical-sizing: auto;
+//   font-style: normal;
+//   height: 100%;
+  
+// }
 .general-width{
   @apply  px-2 sm:px-8 md:px-14 lg:px-32 xl:px-42 2xl:px-54
 }
+
 
 mat-spinner {
   // margin: auto;
@@ -41,6 +41,8 @@ mat-spinner {
     width: 1.5rem !important;
   }
 }
+
+
 
 input.ng-touched.ng-invalid {
   border: 1px solid #ba1a1a;

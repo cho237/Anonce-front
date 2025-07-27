@@ -7,7 +7,7 @@ import {AuthReq} from "../../user.model";
 import {FormsModule} from "@angular/forms";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatIcon} from "@angular/material/icon";
-import {NgClass} from "@angular/common";
+
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +16,7 @@ import {NgClass} from "@angular/common";
     MatIcon,
     MatProgressSpinner,
     RouterLink,
-    NgClass
+  
   ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'

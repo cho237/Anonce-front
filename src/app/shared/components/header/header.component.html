@@ -1,20 +1,24 @@
-<script src="../../../features/home/home.component.ts"></script>
-<div class="py-4 general-width text-white  bg-[#003E73] flex justify-between gap-4 items-center">
-
-    <img alt="logo" class="h-6 sm:h-8 lg:h-10" src="logo.svg">
-
-    @if (isLoggedIn()){
-    <div [matMenuTriggerFor]="menu" class="bg-[#0EBBE3] p-1 sm:p-2 rounded-4xl font-bold cursor-pointer text-sm md:text-md xl:text-lg xl:px-2.5">{{initials()}}</div>
-    }
-    <mat-menu #menu="matMenu">
-        <div class="p-2 text-sm  bg-[#003E73] font-bold flex flex-col gap-2">
-            <div
-                    (click)="logout()"
-                    class="cursor-pointer flex justify-between items-center hover:opacity-70"
-            >
-                <div class="mr-4">Se déconnecter</div>
-                <mat-icon class="">logout</mat-icon>
-            </div>
-        </div>
-    </mat-menu>
+<div
+  [ngClass]="{
+    'hidden': !user(),
+ }"
+  class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-5 mb-5 flex flex-col md:flex-row justify-between items-center"
+>
+  <div class="text-2xl font-bold text-blue-500 mb-4 md:mb-0">
+    Association d'eleve
+  </div>
+  <div class="flex items-center gap-4">
+    <span class="font-medium">{{ user()?.name }}</span>
+    <span
+      class="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium"
+    >
+      {{ user()?.role }}
+    </span>
+    <button
+      (click)="logout()"
+      class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer"
+    >
+      Déconnexion
+    </button>
+  </div>
 </div>
