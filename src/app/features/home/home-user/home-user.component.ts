@@ -33,7 +33,6 @@ import { MatIcon } from '@angular/material/icon';
   imports: [
     ModalComponent,
     CommonModule,
-    DatePipe,
     MatProgressSpinner,
     FormsModule,
     MatIcon,
@@ -208,9 +207,15 @@ export class HomeUserComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.voteService.getAll(true).subscribe({
         next: (data) => {
-          console.log(data);
           this.votes.set(data.data!);
           this.loadingVotes.set(false);
+          if (!data.success) {
+            const errMsg = Array.isArray(data.message)
+              ? data.message[0]
+              : data.message || 'Une erreur est survenue. Réessayez.';
+            this.toaster.error(errMsg);
+            return;
+          }
         },
         error: (err) => this.loadingVotes.set(false),
       })

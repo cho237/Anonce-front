@@ -6,9 +6,9 @@
       Annonces récentes
     </h2>
     @if(annoncement().length === 0) {
-    <div class="text-center py-10 text-gray-500">
+    <div class="text-center py-10">
       <div class="text-5xl mb-4">📢</div>
-      <p>Aucune annonce pour le moment</p>
+      <p class="text-white">Aucune annonce pour le moment</p>
     </div>
     } @if (loadingAnoncements()) {
     <div class="py-4">

@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center">
+<div class="flex items-center justify-center min-h-[calc(100vh-64px)]">
   <div
     class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-md"
   >
@@ -53,7 +53,7 @@
       <button
         type="submit"
         [disabled]="!signinForm.valid || loading()"
-        class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:-translate-y-0.5 mt-20"
+        class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:-translate-y-0.5 mt-14 cursor-pointer"
       >
         Se connecter
       </button>

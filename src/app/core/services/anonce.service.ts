@@ -21,8 +21,8 @@ export class AnonceService {
     return this.http.get<Anonce[]>(`${this.apiUrl}`);
   }
 
-  add(anonce: Anonce): Observable<Anonce> {
-    return this.http.post<Anonce>(`${this.apiUrl}`, anonce);
+  add(anonce: Anonce): Observable<Anonce[]> {
+    return this.http.post<Anonce[]>(`${this.apiUrl}`, anonce);
   }
 
   markAsRead(anonceId: string): Observable<ReadAnonces[]> {
@@ -34,14 +34,14 @@ export class AnonceService {
   }
 
   readers(anonceId: string): Observable<AnonceReader[]> {
-    return this.http.get<AnonceReader[]>(`${this.apiUrl}/readers`);
+    return this.http.get<AnonceReader[]>(`${this.apiUrl}/${anonceId}/readers`);
   }
 
   details(anonceId: string): Observable<Anonce> {
     return this.http.get<Anonce>(`${this.apiUrl}/${anonceId}`);
   }
 
-  delete(anonceId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${anonceId}`);
+  delete(anonceId: string): Observable<Anonce[]> {
+    return this.http.delete<Anonce[]>(`${this.apiUrl}/${anonceId}`);
   }
 }

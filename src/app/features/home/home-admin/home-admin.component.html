@@ -1,1 +1,271 @@
-<p>home-admin works!</p>
+<mat-tab-group class="" mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Anonce">
+    <div class="py-4">
+      <div class="flex justify-end">
+        <button
+          (click)="openAnonceModal(false)"
+          class="rounded-sm cursor-pointer px-5 py-3 bg-blue-500 text-white text-sm hover:opacity-80 mb-4"
+        >
+          Créer une annonce
+        </button>
+      </div>
+      @if(annoncement() && annoncement()!.length === 0) {
+      <div class="text-center py-10 text-white">
+        <div class="text-5xl mb-4">📢</div>
+        <p class="italic">Aucune annonce pour le moment</p>
+      </div>
+      } @if (loadingAnoncements()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      } @for (annoncement of annoncement(); track $index) {
+      <div id="announcement-card  hover:shadow-lg transition-all duration-200">
+        <div
+          class="border-l-4 border-indigo-600 mb-4 p-4 bg-gray-50 rounded-lg transition hover:translate-x-1"
+        >
+          <div class="font-bold text-lg text-gray-800 flex">
+            {{ annoncement.title }}
+          </div>
+          <div class="text-sm text-gray-500">
+            {{ annoncement.createdAt | date : "fullDate" }}
+            {{ annoncement.createdAt | date : "shortTime" }}
+          </div>
+          <div class="text-gray-700">
+            {{ annoncement.content | slice : 0 : 100 }}...
+          </div>
+          <button
+            (click)="openAnonceModal(true, annoncement)"
+            class="mt-2 mr-2 bg-yellow-400 hover:bg-yellow-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+          >
+            Edit
+          </button>
+          <button
+            (click)="openReadersModal(annoncement.id!)"
+            class="mt-2 mr-2 bg-blue-400 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+          >
+            Vu par
+          </button>
+          <button
+            (click)="
+              openConfirmDeleteModal(true, annoncement.id!, annoncement.title)
+            "
+            class="mt-2 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </mat-tab>
+  <mat-tab label="Vote">
+    <div class="py-4">
+      <div class="flex justify-end">
+        <button
+          (click)="openVoteModal(false)"
+          class="rounded-sm cursor-pointer px-5 py-3 bg-blue-500 text-white text-sm hover:opacity-80 mb-4"
+        >
+          Créer un vote
+        </button>
+      </div>
+
+      @if(votes() && votes()!.length === 0) {
+      <div class="text-center py-10 text-white">
+        <div class="text-5xl mb-4">🗳️</div>
+        <p>Aucun vote pour le moment</p>
+      </div>
+      } @if (loadingVotes()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      } @for (vote of votes(); track $index) {
+      <div
+        class="vote-card cursor-pointer hover:shadow-lg transition-all duration-200"
+        id="studentVotes"
+      >
+        <div
+          class="border-2 border-indigo-300 rounded-lg p-4 mb-2 bg-gradient-to-br from-gray-50 to-gray-100 cursor-pointer hover:shadow-lg"
+        >
+          <div
+            class="font-bold text-lg text-gray-800 mb-2 flex items-center justify-between"
+          >
+            <div class="">{{ vote.voteData.title }}</div>
+            <mat-slide-toggle
+              (change)="onToggleVote($event, vote.voteData.id!)"
+              [(ngModel)]="vote.voteData.active"
+            ></mat-slide-toggle>
+          </div>
+          <p *ngIf="vote.voteData.description" class="text-gray-600 mb-2">
+            {{
+              vote.voteData.description.length > 80
+                ? vote.voteData.description.substring(0, 80) + "..."
+                : vote.voteData.description
+            }}
+          </p>
+          <div class="mb-4 text-sm">
+            <div class="text-blue-500 font-medium">
+              {{ vote.voteData.candidates.length }} candidat
+            </div>
+          </div>
+          <button
+            class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer mr-2"
+          >
+            Voir les détails
+          </button>
+          <button
+            (click)="
+              openConfirmDeleteModal(
+                false,
+                vote.voteData.id!,
+                vote.voteData.title
+              )
+            "
+            class="mt-2 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </mat-tab>
+</mat-tab-group>
+
+<app-modal [open]="isVoteModalOpen()" (close)="closeVoteModal()">
+  <ng-container>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">
+      {{
+        editModeVote()
+          ? "Modifier le vote " + vote.title
+          : "Créer un nouveau vote"
+      }}
+    </h2>
+  </ng-container>
+</app-modal>
+
+<app-modal [open]="isAnonceModalOpen()" (close)="closeAnoncementModal()">
+  <ng-container>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">
+      {{ editMode() ? "Modifier l'annonce " : "Créer une annonce" }}
+    </h2>
+
+    <form
+      (ngSubmit)="submitAnonce()"
+      #anonceForm="ngForm"
+      class="space-y-4 py-4"
+    >
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Titre de l'annonce
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="anonce.title"
+          id="title"
+          name="title"
+          required
+          placeholder="Entrez le titre de l'annonce"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Contenu de l'annonce
+        </label>
+        <textarea
+          [(ngModel)]="anonce.content"
+          id="content"
+          name="content"
+          required
+          placeholder="Entrez le contenu de l'annonce"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+          rows="4"
+        ></textarea>
+      </div>
+
+      @if (!savingAnnonce()) {
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          [disabled]="!anonceForm.valid || savingAnnonce()"
+          class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:-translate-y-0.5 mt-4 cursor-pointer"
+        >
+          Enregistrer
+        </button>
+      </div>
+      } @if (savingAnnonce()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      }
+    </form>
+  </ng-container>
+</app-modal>
+
+<app-modal
+  [open]="isConfirmDeleteModalOpen()"
+  (close)="closeConfirmDeleteModal()"
+>
+  <div class="">
+    <div class="flex gap-2 mb-4 items-center">
+      <img src="delete-icon.svg" alt="" />
+      <h2 class="text-2xl font-bold text-gray-800">
+        Supprimer {{ deleteData.isAnonce ? " une annonce" : "un vote" }}
+      </h2>
+    </div>
+    <p>
+      Êtes-vous sûr de vouloir supprimer{{
+        deleteData.isAnonce ? " l'annonce" : " le vote"
+      }}
+      <span class="font-bold">"{{ deleteData.title }}"</span>
+      ? Cette action est irréversible
+    </p>
+    <div class="mt-4 flex justify-end gap-2">
+      @if (deleting()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      } @if (!deleting()) {
+      <button
+        (click)="closeConfirmDeleteModal()"
+        class="rounded-sm cursor-pointer px-5 py-3 text-gray-500 text-sm hover:opacity-80 cursor-pointer"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="delete()"
+        class="rounded-sm cursor-pointer px-5 py-3 bg-blue-500 text-white text-sm hover:opacity-80"
+      >
+        Supprimer
+      </button>
+      }
+    </div>
+  </div>
+</app-modal>
+
+<app-modal [open]="isReadersModalOpen()" (close)="closeReadersModal()">
+  @if (!loadingReaders()) {
+  <div class="">
+    <h2 class="text-xl font-bold text-gray-800 pb-8">
+      les personnes qui ont lu l’annonce
+    </h2>
+  </div>
+  } @if(readers().length === 0) {
+
+  <p class="py-8 text-center italic">Aucun lecteur pour le moment.</p>
+  } @if (loadingReaders()) {
+  <div class="py-4">
+    <mat-spinner class="xs mx-auto"></mat-spinner>
+  </div>
+  } @if (!loadingReaders()) { @for (reader of readers(); track $index) {
+  <div class="py-2 border-b border-gray-200">
+    <div class="flex items-center justify-between gap-2">
+      <span class="text-gray-700 line-clamp-1">{{ reader.user.name }}</span>
+      <span class="text-sm text-gray-500">
+        {{ reader.readAt | date : "fullDate" }}
+        {{ reader.readAt | date : "shortTime" }}
+      </span>
+    </div>
+  </div>
+  } }
+</app-modal>

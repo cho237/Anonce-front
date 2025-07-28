@@ -54,9 +54,15 @@ export class VoteService {
   }
 
   activate(voteId: string, isActive: boolean): Observable<VoteResponse<Vote>> {
-    return this.http.patch<VoteResponse<Vote>>(`${this.apiUrl}`, {
+    return this.http.patch<VoteResponse<Vote>>(`${this.apiUrl}/activer`, {
       voteId,
       isActive,
     });
+  }
+
+  delete(voteId: string): Observable<VoteResponse<VoteListRes[]>> {
+    return this.http.delete<VoteResponse<VoteListRes[]>>(
+      `${this.apiUrl}/${voteId}`
+    );
   }
 }

@@ -4,6 +4,17 @@
 @import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
 
 
+:root {
+  @include mat.tabs-overrides((
+    active-focus-label-text-color: white,
+    inactive-label-text-color: white,
+    active-label-text-color: white,
+  ));
+
+}
+
+
+
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 // :root {
