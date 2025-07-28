@@ -1,3 +1,4 @@
+<app-header></app-header>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
   <div
     class="card bg-white bg-opacity-95 p-6 rounded-xl shadow-md backdrop-blur-md max-h-[500px] md:max-h-[700px] xl:max-h-[800px] overflow-y-auto"
@@ -102,7 +103,10 @@
   <ng-container>
     <h2 class="text-2xl font-bold mb-2">{{ detailAnonce()?.title }}</h2>
 
-    <div class="text-gray-800 leading-relaxed max-h-[200px] overflow-y-auto">
+    <div
+      style="white-space: pre-line"
+      class="text-gray-800 leading-relaxed max-h-[200px] overflow-y-auto"
+    >
       {{ detailAnonce()?.content }}
     </div>
 

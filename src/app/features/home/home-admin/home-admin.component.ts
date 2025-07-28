@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Subscription } from 'rxjs';
-import { Vote, VoteListRes } from '../../../core/models/vote.model';
+import { Vote, VoteListRes, VoteResult } from '../../../core/models/vote.model';
 import { Anonce, AnonceReader } from '../../../core/models/anonce.model';
 import { ToastrService } from 'ngx-toastr';
 import { VoteService } from '../../../core/services/vote.service';
@@ -9,11 +9,13 @@ import { AnonceService } from '../../../core/services/anonce.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {
   MatSlideToggleChange,
   MatSlideToggleModule,
 } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-home-admin',
@@ -24,6 +26,8 @@ import { FormsModule } from '@angular/forms';
     ModalComponent,
     MatSlideToggleModule,
     FormsModule,
+    HeaderComponent,
+    MatProgressBarModule,
   ],
   templateUrl: './home-admin.component.html',
   styleUrl: './home-admin.component.scss',
@@ -32,7 +36,10 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
   subs = new Subscription();
   loadingVotes = signal(false);
   loadingReaders = signal(false);
+  publishingResults = signal(false);
+  loadingResults = signal(false);
   readers = signal<AnonceReader[]>([]);
+  results = signal<VoteResult[]>([]);
   deleting = signal(false);
   votes = signal<VoteListRes[]>([]);
   anonce: Anonce = {
@@ -54,6 +61,7 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
   savingAnnonce = signal(false);
   isVoteModalOpen = signal(false);
   isReadersModalOpen = signal(false);
+  isVoteResultsModalOpen = signal(false);
   isAnonceModalOpen = signal(false);
   isConfirmDeleteModalOpen = signal(false);
   toaster = inject(ToastrService);
@@ -63,6 +71,7 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
   editMode = signal(false);
   editModeVote = signal(false);
   anonceId = signal<string | null>(null);
+  voteData = signal<Vote | null>(null);
 
   ngOnInit(): void {
     this.getVotes();
@@ -92,6 +101,31 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
     );
   }
 
+  loadResults() {
+    this.loadingResults.set(true);
+    this.subs.add(
+      this.voteService.results(this.voteData()?.id!).subscribe({
+        next: (data) => {
+          this.results.set(data.data!);
+          console.log(this.results());
+          this.loadingResults.set(false);
+        },
+        error: (err) => {
+          this.toaster.error('Erreur lors du chargement des résultats');
+          this.loadingResults.set(false);
+        },
+      })
+    );
+  }
+
+  votePercentage(votes: number): number {
+    const totalVotes = this.results().reduce(
+      (acc, result) => acc + result.count,
+      0
+    );
+    return totalVotes > 0 ? (votes / totalVotes) * 100 : 0;
+  }
+
   openConfirmDeleteModal(isAnonce: boolean, id: string, title: string) {
     this.isConfirmDeleteModalOpen.set(true);
     this.deleteData = {
@@ -106,6 +140,16 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
 
   closeReadersModal() {
     this.isReadersModalOpen.set(false);
+  }
+
+  openVoteResultsModal(vote: Vote) {
+    this.voteData.set(vote);
+    this.isVoteResultsModalOpen.set(true);
+    this.loadResults();
+  }
+
+  closeVoteResultsModal() {
+    this.isVoteResultsModalOpen.set(false);
   }
 
   openReadersModal(id: string) {
@@ -185,7 +229,6 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
 
   submitAnonce() {
     this.savingAnnonce.set(true);
-    console.log(this.anonce);
     this.subs.add(
       this.annonceService.add(this.anonce).subscribe({
         next: (data) => {
@@ -201,6 +244,24 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
         },
       })
     );
+  }
+
+  publishResults() {
+    const content = this.results()
+      .map(
+        (result) =>
+          `${result.name}: ${result.count} votes (${this.votePercentage(
+            result.count
+          )}%)`
+      )
+      .join('\n');
+
+    this.anonce = {
+      title: 'Résultats du vote: ' + this.voteData()?.title,
+      content: content,
+    };
+
+    this.submitAnonce();
   }
 
   emptyAnonce() {

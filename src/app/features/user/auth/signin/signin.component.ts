@@ -28,7 +28,6 @@ export class SigninComponent implements OnDestroy {
 
   login() {
     this.loading.set(true);
-    console.log(this.user());
     this.subs.add(
       this.authService.signin(this.user()).subscribe({
         next: (res) => {

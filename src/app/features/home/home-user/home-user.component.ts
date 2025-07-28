@@ -27,6 +27,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-home-user',
@@ -36,6 +37,7 @@ import { MatIcon } from '@angular/material/icon';
     MatProgressSpinner,
     FormsModule,
     MatIcon,
+    HeaderComponent,
   ],
   templateUrl: './home-user.component.html',
   styleUrl: './home-user.component.scss',
@@ -106,7 +108,7 @@ export class HomeUserComponent implements OnInit, OnDestroy {
     this.isVoteModalOpen.set(false);
     this.confirmVoteDialogRef = this.dialog.open(this.confirmVoteDialog, {
       // height: '90vh',
-      width: '40px',
+      width: '400px',
       maxWidth: '90vw',
       autoFocus: false,
       disableClose: true,

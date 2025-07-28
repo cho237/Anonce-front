@@ -43,7 +43,7 @@ export class VoteService {
 
   results(voteId: string): Observable<VoteResponse<VoteResult[]>> {
     return this.http.get<VoteResponse<VoteResult[]>>(
-      `${this.apiUrl}/${voteId}/results`
+      `${this.apiUrl}/${voteId}/resultats`
     );
   }
 

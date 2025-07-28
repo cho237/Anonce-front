@@ -1,3 +1,5 @@
+<app-header></app-header>
+
 <mat-tab-group class="" mat-stretch-tabs="false" mat-align-tabs="start">
   <mat-tab label="Anonce">
     <div class="py-4">
@@ -108,9 +110,10 @@
             </div>
           </div>
           <button
+            (click)="openVoteResultsModal(vote.voteData)"
             class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer mr-2"
           >
-            Voir les détails
+            Resultats
           </button>
           <button
             (click)="
@@ -266,6 +269,61 @@
         {{ reader.readAt | date : "shortTime" }}
       </span>
     </div>
+  </div>
+  } }
+</app-modal>
+
+<app-modal [open]="isVoteResultsModalOpen()" (close)="closeVoteResultsModal()">
+  @if (!loadingResults()) {
+  <div class="">
+    <h2 class="text-xl font-bold text-gray-800 pb-8">les resultats du vote</h2>
+  </div>
+  } @if(results().length === 0 && !loadingResults()) {
+
+  <p class="py-8 text-center italic">Aucun vote pour le moment.</p>
+  } @if (loadingResults()) {
+  <div class="py-4">
+    <mat-spinner class="xs mx-auto"></mat-spinner>
+  </div>
+  } @if (!loadingResults()) {
+  <div class="bg-[#f8f9fa] p-4 rounded-lg shadow-sm flex flex-col gap-4">
+    @for (result of results(); track $index) {
+
+    <!-- <div class="flex items-center justify-between gap-2">
+      <span class="text-gray-700 line-clamp-1">{{ result.candidate }}</span>
+      <span class="text-sm text-gray-500">
+        {{ result.votes }} votes
+      </span>
+    </div> -->
+    <div class="">
+      <div class="items-center justify-between gap-2">
+        <div class="flex items-center justify-between">
+          <span class="line-clamp-1">{{ result.name }}</span>
+          <span class="text-sm text-gray-500">
+            {{ result.count }} votes ({{ votePercentage(result.count) }}%)
+          </span>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="votePercentage(result.count)"
+        ></mat-progress-bar>
+      </div>
+    </div>
+
+    }
+  </div>
+  @if (publishingResults()) {
+  <div class="py-4">
+    <mat-spinner class="xs mx-auto"></mat-spinner>
+  </div>
+  } @if (!publishingResults()) {
+  <div class="flex justify-end">
+    <button
+      (click)="publishResults()"
+      class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:-translate-y-0.5 mt-4 cursor-pointer"
+    >
+      Annoncer les résultats
+    </button>
   </div>
   } }
 </app-modal>
