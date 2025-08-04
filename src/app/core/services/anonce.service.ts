@@ -4,6 +4,7 @@ import {
   Anonce,
   AnonceReader,
   ReadAnonces,
+  Comment,
 } from '../../core/models/anonce.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -38,10 +39,17 @@ export class AnonceService {
   }
 
   details(anonceId: string): Observable<Anonce> {
-    return this.http.get<Anonce>(`${this.apiUrl}/${anonceId}`);
+    return this.http.get<Anonce>(`${this.apiUrl}/${anonceId}/details`);
   }
 
   delete(anonceId: string): Observable<Anonce[]> {
     return this.http.delete<Anonce[]>(`${this.apiUrl}/${anonceId}`);
+  }
+
+  comment(anonceId: string, content: string): Observable<Anonce> {
+    return this.http.post<Anonce>(`${this.apiUrl}/comment`, {
+      content,
+      anonceId,
+    });
   }
 }

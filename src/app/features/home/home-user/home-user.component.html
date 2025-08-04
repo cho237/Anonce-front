@@ -1,214 +1,273 @@
-<app-header></app-header>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-  <div
-    class="card bg-white bg-opacity-95 p-6 rounded-xl shadow-md backdrop-blur-md max-h-[500px] md:max-h-[700px] xl:max-h-[800px] overflow-y-auto"
-  >
-    <h2 class="text-xl font-bold mb-6 text-center text-gray-800">
-      Annonces récentes
-    </h2>
-    @if(annoncement().length === 0) {
-    <div class="text-center py-10">
-      <div class="text-5xl mb-4">📢</div>
-      <p class="text-white">Aucune annonce pour le moment</p>
-    </div>
-    } @if (loadingAnoncements()) {
-    <div class="py-4">
-      <mat-spinner class="xs mx-auto"></mat-spinner>
-    </div>
-    } @for (annoncement of annoncement(); track $index) {
-    <div id="announcement-card  hover:shadow-lg transition-all duration-200">
-      <div
-        [ngClass]="{ 'border-indigo-700': !isRead(annoncement.id!) }"
-        class="border-l-4 border-indigo-300 mb-4 p-4 bg-gray-50 rounded-lg transition hover:translate-x-1 cursor-pointer"
-      >
-        <div class="font-bold text-lg text-gray-800">
-          {{ annoncement.title }}
-        </div>
-        <div class="text-sm text-gray-500">
-          {{ annoncement.createdAt | date : "fullDate" }}
-          {{ annoncement.createdAt | date : "shortTime" }}
-        </div>
-        <div class="text-gray-700">
-          {{ annoncement.content | slice : 0 : 100 }}...
-        </div>
-        <button
-          class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
-          (click)="openAnonceModal(annoncement)"
-        >
-          Voir les détails
-        </button>
-      </div>
-    </div>
-    }
-  </div>
-
-  <div
-    class="card bg-white bg-opacity-95 p-6 rounded-xl shadow-md backdrop-blur-md max-h-[500px] md:max-h-[700px] xl:max-h-[800px] overflow-y-auto"
-  >
-    <h2 class="text-xl font-bold mb-6 text-center text-gray-800">
-      Votes actifs
-    </h2>
-
-    @if(votes().length === 0) {
-    <div class="text-center py-10 text-gray-500">
-      <div class="text-5xl mb-4">🗳️</div>
-      <p>Aucun vote actif</p>
-    </div>
-    } @if (loadingAnoncements()) {
-    <div class="py-4">
-      <mat-spinner class="xs mx-auto"></mat-spinner>
-    </div>
-    } @for (vote of votes(); track $index) {
+<div class="bg-gradient-to-br from-indigo-400 to-blue-600 min-h-screen">
+  <app-header></app-header>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 px-8">
     <div
-      class="vote-card cursor-pointer hover:shadow-lg transition-all duration-200"
-      id="studentVotes"
+      class="card bg-white bg-opacity-95 p-6 rounded-xl shadow-md backdrop-blur-md max-h-[500px] md:max-h-[700px] xl:max-h-[800px] overflow-y-auto"
     >
-      <div
-        [ngClass]="{ 'border-indigo-700': !hasVoted(vote.voteData.id!) }"
-        class="border-2 border-indigo-300 rounded-lg p-4 mb-2 bg-gradient-to-br from-gray-50 to-gray-100 cursor-pointer hover:shadow-lg"
-      >
-        <div class="font-bold text-lg text-gray-800 mb-2">
-          {{ vote.voteData.title }}
-        </div>
-        <p *ngIf="vote.voteData.description" class="text-gray-600 mb-2">
-          {{
-            vote.voteData.description.length > 80
-              ? vote.voteData.description.substring(0, 80) + "..."
-              : vote.voteData.description
-          }}
-        </p>
-        <div class="mb-4 text-sm">
-          <div class="text-blue-500 font-medium">
-            {{ vote.voteData.candidates.length }} candidat
+      <h2 class="text-xl font-bold mb-6 text-center text-gray-800">
+        Annonces récentes
+      </h2>
+      @if(annoncement().length === 0) {
+      <div class="text-center py-10">
+        <div class="text-5xl mb-4">📢</div>
+        <p class="text-white">Aucune annonce pour le moment</p>
+      </div>
+      } @if (loadingAnoncements()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      } @for (annoncement of annoncement(); track $index) {
+      <div id="announcement-card  hover:shadow-lg transition-all duration-200">
+        <div
+          [ngClass]="{ 'border-indigo-700': !isRead(annoncement.id!) }"
+          class="border-l-4 border-indigo-300 mb-4 p-4 bg-gray-50 rounded-lg transition hover:translate-x-1 cursor-pointer"
+        >
+          <div class="font-bold text-lg text-gray-800">
+            {{ annoncement.title }}
           </div>
-          @if (hasVoted(vote.voteData.id!)) {
-          <div class="text-blue-500 font-medium mb-2">✓ Vous avez voté</div>
-          }
+          <div class="text-sm text-gray-500">
+            {{ annoncement.createdAt | date : "fullDate" }}
+            {{ annoncement.createdAt | date : "shortTime" }}
+          </div>
+          <div class="text-gray-700">
+            {{ annoncement.content | slice : 0 : 100 }}...
+          </div>
+          <button
+            class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+            (click)="openAnonceModal(annoncement)"
+          >
+            Voir les détails
+          </button>
         </div>
-        <button
-          (click)="openVoteModal(vote)"
-          class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+      </div>
+      }
+    </div>
+
+    <div
+      class="card bg-white bg-opacity-95 p-6 rounded-xl shadow-md backdrop-blur-md max-h-[500px] md:max-h-[700px] xl:max-h-[800px] overflow-y-auto"
+    >
+      <h2 class="text-xl font-bold mb-6 text-center text-gray-800">
+        Votes actifs
+      </h2>
+
+      @if(votes().length === 0) {
+      <div class="text-center py-10 text-gray-500">
+        <div class="text-5xl mb-4">🗳️</div>
+        <p>Aucun vote actif</p>
+      </div>
+      } @if (loadingAnoncements()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      } @for (vote of votes(); track $index) {
+      <div
+        class="vote-card cursor-pointer hover:shadow-lg transition-all duration-200"
+        id="studentVotes"
+      >
+        <div
+          [ngClass]="{ 'border-indigo-700': !hasVoted(vote.voteData.id!) }"
+          class="border-2 border-indigo-300 rounded-lg p-4 mb-2 bg-gradient-to-br from-gray-50 to-gray-100 cursor-pointer hover:shadow-lg"
         >
-          Voir les détails
+          <div class="font-bold text-lg text-gray-800 mb-2">
+            {{ vote.voteData.title }}
+          </div>
+          <p *ngIf="vote.voteData.description" class="text-gray-600 mb-2">
+            {{
+              vote.voteData.description.length > 80
+                ? vote.voteData.description.substring(0, 80) + "..."
+                : vote.voteData.description
+            }}
+          </p>
+          <div class="mb-4 text-sm">
+            <div class="text-blue-500 font-medium">
+              {{ vote.voteData.candidates.length }} candidat
+            </div>
+            @if (hasVoted(vote.voteData.id!)) {
+            <div class="text-blue-500 font-medium mb-2">✓ Vous avez voté</div>
+            }
+          </div>
+          <button
+            (click)="openVoteModal(vote)"
+            class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+          >
+            Voir les détails
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- In your parent component template -->
+  <app-modal [open]="isAnnoncementModalOpen()" (close)="closeAnonceModal()">
+    @if(detailAnonce()) {
+    <ng-container>
+      <h2 class="text-2xl font-bold mb-2">{{ detailAnonce()?.title }}</h2>
+
+      <div
+        style="white-space: pre-line"
+        class="text-gray-800 leading-relaxed max-h-[200px] overflow-y-auto"
+      >
+        {{ detailAnonce()?.content }}
+      </div>
+
+      <div class="pt-5 pb-8">
+        @for (comment of detailAnonce()?.comments; track $index) {
+        <div class="py-2">
+          <div class="flex items-center">
+            <div class="shrink-0">
+              <img
+                class="w-10 h-10 rounded-full border border-gray-300"
+                src="user-placeholder.jpg"
+                alt="Bonnie image"
+              />
+            </div>
+
+            <div class="flex-1 min-w-0 ms-2">
+              <p class="text-sm font-medium text-gray-900 truncate">
+                {{ comment.author?.name }}
+              </p>
+              <p class="text-sm text-gray-500 truncate">
+                {{ comment.content }}
+              </p>
+            </div>
+            <div
+              class="inline-flex text-xs items-center text-base font-semibold text-gray-900"
+            >
+              {{ comment.createdAt | date : "fullDate" }}
+              {{ comment.createdAt | date : "shortTime" }}
+            </div>
+          </div>
+        </div>
+        } @if (user()?.id !== detailAnonce()?.author &&
+        detailAnonce()!.author!.role! !== 'ADMIN') {
+        <form #commentForm="ngForm">
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="comment"
+              name="comment"
+              required
+              [(ngModel)]="newComment"
+              required
+              placeholder="Ajouter un commentaire"
+              class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+            />
+            <button
+              (click)="commentAnonce()"
+              [disabled]="!commentForm.valid"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
+            >
+              Ajouter
+            </button>
+          </div>
+        </form>
+        }
+      </div>
+
+      <div class="mb-4 text-sm text-gray-500 mt-5">
+        <strong>Par:</strong> {{ detailAnonce()?.author?.name }}<br />
+        <strong>Date:</strong>
+        {{ detailAnonce()?.createdAt | date : "fullDate" }} à
+        {{ detailAnonce()?.createdAt | date : "shortTime" }}<br />
+      </div>
+    </ng-container>
+    }
+  </app-modal>
+
+  <app-modal [open]="isVoteModalOpen()" (close)="closeVoteModal()">
+    @if (detailVote() && detailVote()!.voteData) {
+    <ng-container>
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">
+        {{ detailVote()?.voteData?.title! }}
+      </h2>
+      <p class="text-gray-600 text-lg mb-6 max-h-[500px] overflow-y-auto">
+        {{ detailVote()?.voteData?.description! }}
+      </p>
+
+      <h3 class="text-lg font-bold mb-4">Votez :</h3>
+      @for (candidate of detailVote()!.voteData.candidates; track candidate.id)
+      {
+      <div
+        class="border-2 hover:bg-blue-50 rounded-lg p-4 mb-3 cursor-pointer transition-all duration-300 flex justify-between items-center"
+        [ngClass]="
+          detailVote()?.userVote &&
+          detailVote()?.userVote?.candidateId === candidate.id
+            ? 'border-blue-500'
+            : 'border-gray-200'
+        "
+        (click)="openConfirmVoteDialog(candidate)"
+      >
+        <div class="flex flex-col">
+          <img class="h-20 rounded-xl" src="user-placeholder.jpg" alt="" />
+          <span class="line-clamp-1">{{ candidate.name }} </span>
+          <span style="font-size: small" class="text-gray-600 line-clamp-3"
+            >{{ candidate.description }}
+          </span>
+        </div>
+
+        <span class="flex-shrink-0">{{
+          detailVote()?.userVote &&
+          detailVote()?.userVote?.candidateId === candidate.id
+            ? "✓ Votre choix"
+            : "Cliquer pour voter"
+        }}</span>
+      </div>
+
+      }
+      <p *ngIf="!detailVote()?.userVote" class="text-center text-gray-500 mt-4">
+        Cliquez sur une option ci-dessus pour voter
+      </p>
+    </ng-container>
+    }
+  </app-modal>
+
+  <ng-template #confirmVoteDialog>
+    <div class="flex justify-end py-2 px-4">
+      <div
+        (click)="closeConfirmVoteModal()"
+        class="text-2xl text-gray-400 hover:text-gray-700 cursor-pointer"
+      >
+        &times;
+      </div>
+    </div>
+
+    <div class="py-8 px-4 flex flex-col gap-2 xl:gap-4">
+      <p class="text-center text-xl pb-4">
+        Confirmer le vote :
+        <span class="uppercase">"{{ selectedCanditate()?.name }}"</span>
+      </p>
+
+      <div class="flex flex-col gap-6 text-[#4E5566]">
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Mot de passe</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            [type]="!visiblePass() ? 'password' : 'text'"
+            required
+            placeholder="Entrez votre mot de passe"
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+          />
+          <mat-icon
+            (click)="viewPass()"
+            class="absolute end-2 bottom-3 cursor-pointer"
+            >visibility</mat-icon
+          >
+        </div>
+
+        <button
+          (click)="confirmVote()"
+          [disabled]="password === ''"
+          class="rounded-sm cursor-pointer w-full px-5 py-3 bg-[#3B46F1] text-white text-sm hover:opacity-80 mb-4"
+        >
+          Confirmer le vote
         </button>
       </div>
     </div>
-    }
-  </div>
+  </ng-template>
 </div>
-
-<!-- In your parent component template -->
-<app-modal [open]="isAnnoncementModalOpen()" (close)="closeAnonceModal()">
-  @if(detailAnonce()) {
-  <ng-container>
-    <h2 class="text-2xl font-bold mb-2">{{ detailAnonce()?.title }}</h2>
-
-    <div
-      style="white-space: pre-line"
-      class="text-gray-800 leading-relaxed max-h-[200px] overflow-y-auto"
-    >
-      {{ detailAnonce()?.content }}
-    </div>
-
-    <div class="mb-4 text-sm text-gray-500 mt-5">
-      <strong>Par:</strong> {{ detailAnonce()?.author?.name }}<br />
-      <strong>Date:</strong>
-      {{ detailAnonce()?.createdAt | date : "fullDate" }} à
-      {{ detailAnonce()?.createdAt | date : "shortTime" }}<br />
-    </div>
-  </ng-container>
-  }
-</app-modal>
-
-<app-modal [open]="isVoteModalOpen()" (close)="closeVoteModal()">
-  @if (detailVote() && detailVote()!.voteData) {
-  <ng-container>
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">
-      {{ detailVote()?.voteData?.title! }}
-    </h2>
-    <p class="text-gray-600 text-lg mb-6 max-h-[500px] overflow-y-auto">
-      {{ detailVote()?.voteData?.description! }}
-    </p>
-
-    <h3 class="text-lg font-bold mb-4">Votez :</h3>
-    @for (candidate of detailVote()!.voteData.candidates; track candidate.id) {
-    <div
-      class="border-2 hover:bg-blue-50 rounded-lg p-4 mb-3 cursor-pointer transition-all duration-300 flex justify-between items-center"
-      [ngClass]="
-        detailVote()?.userVote &&
-        detailVote()?.userVote?.candidateId === candidate.id
-          ? 'border-blue-500'
-          : 'border-gray-200'
-      "
-      (click)="openConfirmVoteDialog(candidate)"
-    >
-      <div class="flex flex-col">
-        <span class="line-clamp-1">{{ candidate.name }} </span>
-        <span style="font-size: small" class="text-gray-600 line-clamp-3"
-          >{{ candidate.description }}
-        </span>
-      </div>
-
-      <span class="flex-shrink-0">{{
-        detailVote()?.userVote &&
-        detailVote()?.userVote?.candidateId === candidate.id
-          ? "✓ Votre choix"
-          : "Cliquer pour voter"
-      }}</span>
-    </div>
-    }
-    <p *ngIf="!detailVote()?.userVote" class="text-center text-gray-500 mt-4">
-      Cliquez sur une option ci-dessus pour voter
-    </p>
-  </ng-container>
-  }
-</app-modal>
-
-<ng-template #confirmVoteDialog>
-  <div class="flex justify-end py-2 px-4">
-    <div
-      (click)="closeConfirmVoteModal()"
-      class="text-2xl text-gray-400 hover:text-gray-700 cursor-pointer"
-    >
-      &times;
-    </div>
-  </div>
-
-  <div class="py-8 px-4 flex flex-col gap-2 xl:gap-4">
-    <p class="text-center text-xl pb-4">
-      Confirmer le vote :
-      <span class="uppercase">"{{ selectedCanditate()?.name }}"</span>
-    </p>
-
-    <div class="flex flex-col gap-6 text-[#4E5566]">
-      <div class="relative">
-        <label class="block text-sm font-medium text-gray-700 mb-2"
-          >Mot de passe</label
-        >
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="password"
-          [type]="!visiblePass() ? 'password' : 'text'"
-          required
-          placeholder="Entrez votre mot de passe"
-          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-        />
-        <mat-icon
-          (click)="viewPass()"
-          class="absolute end-2 bottom-3 cursor-pointer"
-          >visibility</mat-icon
-        >
-      </div>
-
-      <button
-        (click)="confirmVote()"
-        [disabled]="password === ''"
-        class="rounded-sm cursor-pointer w-full px-5 py-3 bg-[#3B46F1] text-white text-sm hover:opacity-80 mb-4"
-      >
-        Confirmer le vote
-      </button>
-    </div>
-  </div>
-</ng-template>

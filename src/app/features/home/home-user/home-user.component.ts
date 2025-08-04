@@ -43,6 +43,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
   styleUrl: './home-user.component.scss',
 })
 export class HomeUserComponent implements OnInit, OnDestroy {
+[x: string]: any;
   user = signal<User | null>(null);
   isVoteModalOpen = signal(false);
   isAnnoncementModalOpen = signal(false);
@@ -65,6 +66,7 @@ export class HomeUserComponent implements OnInit, OnDestroy {
   detailVote = signal<VoteListRes | null>(null);
   selectedCanditate = signal<VoteCandidate | null>(null);
   password = '';
+  newComment = '';
   dialog = inject(MatDialog);
   readonly votedCount = computed(
     () => this.votes().filter((v) => v.userVote != null).length
@@ -95,6 +97,18 @@ export class HomeUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  getAnoncementDetails(id: string) {
+    this.annonceService.details(id).subscribe({
+      next: (data) => {
+        this.detailAnonce.set(data);
+        this.isAnnoncementModalOpen.set(true);
+      },
+      error: (err) => {
+        this.toaster.error("Erreur lors de la récupération de l'annonce.");
+      },
+    });
+  }
+
   hasVoted(voteId: string): boolean {
     return this.votes().some(
       (vote) => vote.voteData.id === voteId && vote.userVote
@@ -115,11 +129,32 @@ export class HomeUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  commentAnonce() {
+    if (!this.detailAnonce()) return;
+    if (!this.newComment.trim()) {
+      this.toaster.error('Le contenu du commentaire ne peut pas être vide.');
+      return;
+    }
+    this.annonceService
+      .comment(this.detailAnonce()!.id!, this.newComment.trim())
+      .subscribe({
+        next: (data) => {
+          this.toaster.success('Commentaire ajouté avec succès');
+          // Only set the comments array from backend, do not append locally
+          this.detailAnonce.set(data);
+          this.newComment = '';
+        },
+        error: (err) => {
+          this.toaster.error("Erreur lors de l'ajout du commentaire.");
+        },
+      });
+  }
+
   openAnonceModal(anonce: Anonce) {
     if (!this.isRead(anonce.id!)) {
       this.markAnoncementAsRead(anonce.id!);
     }
-    this.detailAnonce.set(anonce);
+    this.getAnoncementDetails(anonce.id!);
     this.isAnnoncementModalOpen.set(true);
   }
 
