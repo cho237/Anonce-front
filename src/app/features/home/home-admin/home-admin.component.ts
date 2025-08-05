@@ -16,6 +16,8 @@ import {
 } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { User } from '../../user/user.model';
+import { AuthService } from '../../user/auth/auth.service';
 
 @Component({
   selector: 'app-home-admin',
@@ -37,11 +39,13 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
   loadingVotes = signal(false);
   loadingReaders = signal(false);
   publishingResults = signal(false);
+  creatingVote = signal(false);
   loadingResults = signal(false);
   readers = signal<AnonceReader[]>([]);
   results = signal<VoteResult[]>([]);
   deleting = signal(false);
   votes = signal<VoteListRes[]>([]);
+  user = signal<User | null>(null);
   anonce: Anonce = {
     title: '',
     content: '',
@@ -72,14 +76,38 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
   editModeVote = signal(false);
   anonceId = signal<string | null>(null);
   voteData = signal<Vote | null>(null);
+  authService = inject(AuthService);
+  newVote: Vote = {
+    title: '',
+    description: '',
+    candidates: [
+      {
+        name: '',
+        description: '',
+      },
+    ],
+  };
 
   ngOnInit(): void {
     this.getVotes();
     this.getAnoncements();
+    this.user.set(this.authService.currentUser());
+  }
+
+  addCandidate() {
+    this.newVote.candidates.push({ name: '', description: '' });
+  }
+
+  removeCandidate(index: number) {
+    this.newVote.candidates.splice(index, 1);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   openVoteModal(editMode: boolean, vote?: Vote) {
-    if (vote) this.vote = vote!;
+    if (vote) this.newVote = vote!;
     if (!editMode) this.emptyVote();
     this.editModeVote.set(editMode);
     this.isVoteModalOpen.set(true);
@@ -123,7 +151,8 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
       (acc, result) => acc + result.count,
       0
     );
-    return totalVotes > 0 ? (votes / totalVotes) * 100 : 0;
+    const percentage = totalVotes > 0 ? (votes / totalVotes) * 100 : 0;
+    return Math.round(percentage * 100) / 100; // Round to 2 decimal places
   }
 
   openConfirmDeleteModal(isAnonce: boolean, id: string, title: string) {
@@ -227,6 +256,31 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
     this.isAnonceModalOpen.set(true);
   }
 
+  submitVote() {
+    this.creatingVote.set(true);
+    this.subs.add(
+      this.voteService.add(this.newVote).subscribe({
+        next: (data) => {
+          if (!data.success) {
+            const errMsg = Array.isArray(data.message)
+              ? data.message[0]
+              : data.message || 'Une erreur est survenue. Réessayez.';
+            this.toaster.error(errMsg);
+            return;
+          }
+          this.toaster.success('Vote ajouté avec succès');
+          this.creatingVote.set(false);
+          this.getVotes();
+          this.closeVoteModal();
+        },
+        error: () => {
+          this.creatingVote.set(false);
+          this.toaster.error('Une erreur est survenue. Réessayez.');
+        },
+      })
+    );
+  }
+
   submitAnonce() {
     this.savingAnnonce.set(true);
     this.subs.add(
@@ -236,6 +290,7 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
           this.annoncement.set(data);
           this.savingAnnonce.set(false);
           this.isAnonceModalOpen.set(false);
+          if (this.isVoteResultsModalOpen()) this.closeVoteResultsModal();
           this.emptyAnonce();
         },
         error: (err) => {
@@ -249,10 +304,10 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
   publishResults() {
     const content = this.results()
       .map(
-        (result) =>
+        (result, index) =>
           `${result.name}: ${result.count} votes (${this.votePercentage(
             result.count
-          )}%)`
+          )}%)${index === 0 ? '🏆 ' : ''}`
       )
       .join('\n');
 
@@ -271,10 +326,15 @@ export class HomeAdminComponent implements OnInit, OnDestroy {
     };
   }
   emptyVote() {
-    this.vote = {
+    this.newVote = {
       title: '',
       description: '',
-      candidates: [],
+      candidates: [
+        {
+          name: '',
+          description: '',
+        },
+      ],
     };
   }
 

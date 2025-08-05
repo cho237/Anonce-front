@@ -43,7 +43,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
   styleUrl: './home-user.component.scss',
 })
 export class HomeUserComponent implements OnInit, OnDestroy {
-[x: string]: any;
+  [x: string]: any;
   user = signal<User | null>(null);
   isVoteModalOpen = signal(false);
   isAnnoncementModalOpen = signal(false);
@@ -68,9 +68,16 @@ export class HomeUserComponent implements OnInit, OnDestroy {
   password = '';
   newComment = '';
   dialog = inject(MatDialog);
+  editMode = signal(false);
   readonly votedCount = computed(
     () => this.votes().filter((v) => v.userVote != null).length
   );
+  anonce: Anonce = {
+    title: '',
+    content: '',
+  };
+  savingAnnonce = signal(false);
+  isAnonceModalOpen = signal(false);
 
   confirmVoteDialogRef?: MatDialogRef<any, any>;
   @ViewChild('confirmVoteDialog') confirmVoteDialog: any;
@@ -87,6 +94,10 @@ export class HomeUserComponent implements OnInit, OnDestroy {
 
   viewPass() {
     this.visiblePass.set(!this.visiblePass());
+  }
+
+  closeAnoncementModal() {
+    this.isAnonceModalOpen.set(false);
   }
 
   markAnoncementAsRead(id: string) {
@@ -109,9 +120,42 @@ export class HomeUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  openNewAnonceModal(editMode: boolean, anonce?: Anonce) {
+    if (!editMode) this.emptyAnonce();
+    if (anonce) this.anonce = anonce!;
+    this.editMode.set(editMode);
+    this.isAnonceModalOpen.set(true);
+  }
+
   hasVoted(voteId: string): boolean {
     return this.votes().some(
       (vote) => vote.voteData.id === voteId && vote.userVote
+    );
+  }
+
+  emptyAnonce() {
+    this.anonce = {
+      title: '',
+      content: '',
+    };
+  }
+
+  submitAnonce() {
+    this.savingAnnonce.set(true);
+    this.subs.add(
+      this.annonceService.add(this.anonce).subscribe({
+        next: (data) => {
+          this.toaster.success('Annonce créée avec succès');
+          this.annoncement.set(data);
+          this.savingAnnonce.set(false);
+          this.isAnonceModalOpen.set(false);
+          this.emptyAnonce();
+        },
+        error: (err) => {
+          this.toaster.error("Erreur lors de la création de l'annonce");
+          this.savingAnnonce.set(false);
+        },
+      })
     );
   }
 

@@ -6,6 +6,9 @@
     >
       <h2 class="text-xl font-bold mb-6 text-center text-gray-800">
         Annonces récentes
+        <span (click)="openNewAnonceModal(false)" class="cursor-pointer"
+          >➕</span
+        >
       </h2>
       @if(annoncement().length === 0) {
       <div class="text-center py-10">
@@ -18,8 +21,11 @@
       </div>
       } @for (annoncement of annoncement(); track $index) {
       <div id="announcement-card  hover:shadow-lg transition-all duration-200">
+        @if(annoncement.author?.role === "ADMIN"){
         <div
-          [ngClass]="{ 'border-indigo-700': !isRead(annoncement.id!) }"
+          [ngClass]="{
+            'border-indigo-700': !isRead(annoncement.id!) && annoncement.author
+          }"
           class="border-l-4 border-indigo-300 mb-4 p-4 bg-gray-50 rounded-lg transition hover:translate-x-1 cursor-pointer"
         >
           <div class="font-bold text-lg text-gray-800">
@@ -30,7 +36,7 @@
             {{ annoncement.createdAt | date : "shortTime" }}
           </div>
           <div class="text-gray-700">
-            {{ annoncement.content | slice : 0 : 100 }}...
+            {{ annoncement.content | slice : 0 : 100 }}
           </div>
           <button
             class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
@@ -39,6 +45,39 @@
             Voir les détails
           </button>
         </div>
+        }@else {
+        <div
+          [ngClass]="{
+            'border-orange-300': !isRead(annoncement.id!) && annoncement.author
+          }"
+          class="border-l-4 border-orange-700 mb-4 p-4 bg-gray-50 rounded-lg transition hover:translate-x-1 cursor-pointer"
+        >
+          <div class="font-bold text-lg text-gray-800">
+            {{ annoncement.title }}
+          </div>
+          <div class="text-sm text-gray-500">
+            {{ annoncement.createdAt | date : "fullDate" }}
+            {{ annoncement.createdAt | date : "shortTime" }}
+          </div>
+          <div class="text-gray-700">
+            {{ annoncement.content | slice : 0 : 100 }}
+          </div>
+          <button
+            class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+            (click)="openAnonceModal(annoncement)"
+          >
+            Voir les détails
+          </button>
+          @if (user()?.id === annoncement.author?.id) {
+          <button
+            class="mt-2 ms-2 bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer"
+            (click)="openNewAnonceModal(true, annoncement)"
+          >
+            Modifier
+          </button>
+          }
+        </div>
+        }
       </div>
       }
     </div>
@@ -125,7 +164,10 @@
 
             <div class="flex-1 min-w-0 ms-2">
               <p class="text-sm font-medium text-gray-900 truncate">
+                @if(detailAnonce()?.author?.id === comment.author?.id){ Auteur
+                }@else if (comment.author?.id === user()?.id) { Vous }@else {
                 {{ comment.author?.name }}
+                }
               </p>
               <p class="text-sm text-gray-500 truncate">
                 {{ comment.content }}
@@ -271,3 +313,62 @@
     </div>
   </ng-template>
 </div>
+
+<app-modal [open]="isAnonceModalOpen()" (close)="closeAnoncementModal()">
+  <ng-container>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">
+      {{ editMode() ? "Modifier l'annonce " : "Créer une annonce" }}
+    </h2>
+
+    <form
+      (ngSubmit)="submitAnonce()"
+      #anonceForm="ngForm"
+      class="space-y-4 py-4"
+    >
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Titre de l'annonce
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="anonce.title"
+          id="title"
+          name="title"
+          required
+          placeholder="Entrez le titre de l'annonce"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Contenu de l'annonce
+        </label>
+        <textarea
+          [(ngModel)]="anonce.content"
+          id="content"
+          name="content"
+          required
+          placeholder="Entrez le contenu de l'annonce"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+          rows="4"
+        ></textarea>
+      </div>
+
+      @if (!savingAnnonce()) {
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          [disabled]="!anonceForm.valid || savingAnnonce()"
+          class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:-translate-y-0.5 mt-4 cursor-pointer"
+        >
+          Enregistrer
+        </button>
+      </div>
+      } @if (savingAnnonce()) {
+      <div class="py-4">
+        <mat-spinner class="xs mx-auto"></mat-spinner>
+      </div>
+      }
+    </form>
+  </ng-container>
+</app-modal>
